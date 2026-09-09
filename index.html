@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我們的關係紅綠燈｜Our Relationship Traffic Lights</title>
+    <style>
+        :root {
+            --primary: #709CA7;          /* 主色：質感莫蘭迪藍 */
+            --primary-hover: #5A838E;
+            --secondary: #D4B29E;        /* 輔色：溫柔奶茶色 */
+            --secondary-hover: #C19A6B;
+            --bg-color: #F4F7F8;         /* 背景：極淺柔藍灰 */
+            --card-bg: #FFFFFF;
+            --text-main: #334155;
+            --text-sub: #64748B;
+            --green: #6DA382;
+            --yellow: #E0A96D;
+            --red: #D96B6B;
+            --purple: #8A7B9B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(112, 156, 167, 0.12);
+            padding: 35px 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* 頂部進度條 */
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #E2E8F0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: right;
+            font-size: 0.85em;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 1.6em;
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .love-note {
+            background-color: #F7F3EF; /* 奶茶淺底 */
+            border-left: 4px solid var(--secondary);
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.95em;
+            line-height: 1.7;
+            color: #52463E;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .intro-box {
+            background-color: #F0F5F6; /* 淺藍底 */
+            border-left: 4px solid var(--primary);
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 0.92em;
+            line-height: 1.7;
+            color: #334155;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(112, 156, 167, 0.25);
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-milk {
+            background-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(212, 178, 158, 0.3);
+        }
+
+        .btn-milk:hover {
+            background-color: var(--secondary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-sub);
+            border: 2px solid #E2E8F0;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: #F8FAFC;
+            color: var(--text-main);
+            transform: none;
+        }
+
+        /* 題目選項區塊 */
+        .question-card {
+            margin-top: 10px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: #EBF3F5;
+            color: var(--primary);
+            font-size: 0.8em;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 14px 18px;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.98em;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary);
+            background-color: #F4F8F9;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: #EBF3F5;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            font-size: 0.95em;
+            margin-top: 10px;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 完成頁與代碼 */
+        .code-box {
+            background-color: #F8FAFC;
+            padding: 15px;
+            border-radius: 12px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.85em;
+            margin: 15px 0;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+        }
+
+        /* 比對結果頁面 */
+        .compare-card {
+            border-bottom: 1px solid #E2E8F0;
+            padding: 15px 0;
+        }
+
+        .compare-tag {
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bg-green { background-color: var(--green); }
+        .bg-yellow { background-color: var(--yellow); }
+        .bg-red { background-color: var(--red); }
+        .bg-purple { background-color: var(--purple); }
+
+        .score-badge {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 1. 首頁 -->
+    <div id="page-home">
+        <h1>🩵 Our Relationship Traffic Lights</h1>
+        <p class="subtitle">我們的關係紅綠燈<br><small>不是為了限制彼此，而是為了更了解彼此。</small></p>
+
+        <div class="love-note">
+            我知道我們最近都有點累了，但希望「我們」可以更好。<br>
+            加油！我都會陪著妳一起度過的 🤍
+        </div>
+
+        <div class="intro-box">
+            這不是一份用來限制彼此的規則，也不是要找出誰對誰錯。<br><br>
+            我們本來就是兩個不同的人，對很多事情的感受也不一定一樣。希望透過這份問卷，更了解彼此在意什麼、什麼會讓彼此不安，以及什麼事情可以放心交給對方自由。<br><br>
+            🟢 綠燈：我可以接受，不太需要特別討論<br>
+            🟡 黃燈：我可能會不舒服，希望可以提前告知或顧慮我的感受<br>
+            🔴 紅燈：這是我的重要界線，希望伴侶不要做<br>
+            ❓ 不確定：我目前不知道，希望我們一起討論<br><br>
+            <strong>我們的目標不是讓彼此答案一樣，而是找到「兩個人都能舒服地待在裡面」的方式。✨</strong>
+        </div>
+
+        <button class="btn btn-milk" onclick="startQuiz()">開始填寫</button>
+        <button class="btn btn-outline" style="margin-top: 12px;" onclick="showPage('page-compare-input')">🔍 查看/比較兩人答案</button>
+    </div>
+
+    <!-- 2. 答題頁面 -->
+    <div id="page-quiz" class="hidden">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-text" id="progress-text">1 / 131</div>
+
+        <div class="question-card">
+            <div class="section-tag" id="section-tag">第一部分｜基本資料</div>
+            <div class="question-title" id="question-title">題目載入中...</div>
+
+            <div id="options-container" class="options-grid"></div>
+
+            <div id="note-container" class="hidden">
+                <p style="font-size: 0.85em; color: var(--text-sub); margin-top: 10px;">補充說明 / 為什麼？（選填）：</p>
+                <textarea id="note-input" rows="2" placeholder="想讓對方更了解你的感受，可以補充在這裡..."></textarea>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-outline" id="btn-prev" onclick="prevQuestion()">上一題</button>
+            <button class="btn" id="btn-next" onclick="nextQuestion()">下一題</button>
+        </div>
+    </div>
+
+    <!-- 3. 完成頁面 -->
+    <div id="page-finish" class="hidden">
+        <h1>謝謝妳願意讓我更了解妳 🤍</h1>
+        
+        <div class="love-note" style="margin-top: 15px;">
+            謝謝妳認真填完～辛苦了！<br>
+            無論結果如何，我都想讓妳知道：不論遇到什麼問題，我都會一直陪著妳一起面對、一起變好！加油 🩵
+        </div>
+
+        <div class="intro-box">
+            請複製下方的「專屬結果碼」，並將它傳給我。<br>
+            等我們都填完後，只要點擊首頁的「查看/比較兩人答案」，貼上我們兩個人的代碼就可以開始比對囉！
+        </div>
+
+        <p style="font-weight: bold; margin-bottom: 5px; color: var(--text-main);">妳的專屬結果碼：</p>
+        <div class="code-box" id="result-code-display">產生中...</div>
+
+        <button class="btn btn-milk" onclick="copyResultCode()">📋 複製結果碼</button>
+        <button class="btn btn-outline" style="margin-top: 12px;" onclick="showPage('page-home')">返回首頁</button>
+    </div>
+
+    <!-- 4. 輸入代碼比對頁面 -->
+    <div id="page-compare-input" class="hidden">
+        <h1>🔍 比對兩人答案</h1>
+        <p class="subtitle">請分別貼上「阿寶」與「小乖」的結果碼：</p>
+
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; font-size: 0.9em;">阿寶的結果碼：</label>
+            <textarea id="code-abao" rows="3" placeholder="貼上阿寶的結果碼..."></textarea>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; font-size: 0.9em;">小乖的結果碼：</label>
+            <textarea id="code-xiaoguai" rows="3" placeholder="貼上小乖的結果碼..."></textarea>
+        </div>
+
+        <button class="btn btn-milk" onclick="processComparison()">開始比對</button>
+        <button class="btn btn-outline" style="margin-top: 12px;" onclick="showPage('page-home')">返回首頁</button>
+    </div>
+
+    <!-- 5. 比較結果顯示頁面 -->
+    <div id="page-compare-result" class="hidden">
+        <h1>📊 兩人答案對比結果</h1>
+        <div class="score-badge" id="match-score">0%</div>
+        <p class="subtitle" style="margin-top: -10px;">紅綠燈選擇一致性率</p>
+
+        <div id="comparison-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;"></div>
+
+        <button class="btn" onclick="showPage('page-home')">返回首頁</button>
+    </div>
+
+</div>
+
+<script>
+const rawQuestions = [
+    { id: 1, sec: "第一部分｜基本資料", text: "1. 這份問卷是誰填的？", type: "single", options: ["阿寶", "小乖"] },
+    { id: 2, sec: "第一部分｜基本資料", text: "2. 填寫前的小提醒：請盡量按照「如果真的發生，我內心最真實的感受」來回答，沒有標準答案。", type: "info" },
+
+    { id: 3, sec: "第二部分｜異性相處 ❤️‍🔥", text: "3. 跟異性單獨吃飯", type: "light" },
+    { id: 4, sec: "第二部分｜異性相處 ❤️‍🔥", text: "4. 跟異性單獨喝酒", type: "light" },
+    { id: 5, sec: "第二部分｜異性相處 ❤️‍🔥", text: "5. 跟異性單獨出去玩一整天", type: "light" },
+    { id: 6, sec: "第二部分｜異性相處 ❤️‍🔥", text: "6. 跟異性單獨看電影", type: "light" },
+    { id: 7, sec: "第二部分｜異性相處 ❤️‍🔥", text: "7. 搭異性的車", type: "light" },
+    { id: 8, sec: "第二部分｜異性相處 ❤️‍🔥", text: "8. 讓異性載自己回家", type: "light" },
+    { id: 9, sec: "第二部分｜異性相處 ❤️‍🔥", text: "9. 去異性朋友家", type: "light" },
+    { id: 10, sec: "第二部分｜異性相處 ❤️‍🔥", text: "10. 異性朋友來自己家", type: "light" },
+    { id: 11, sec: "第二部分｜異性相處 ❤️‍🔥", text: "11. 跟異性朋友聊天到半夜", type: "light" },
+    { id: 12, sec: "第二部分｜異性相處 ❤️‍🔥", text: "12. 每天跟固定的異性聊天", type: "light" },
+    { id: 13, sec: "第二部分｜異性相處 ❤️‍🔥", text: "13. 跟異性朋友講曖昧玩笑", type: "light" },
+    { id: 14, sec: "第二部分｜異性相處 ❤️‍🔥", text: "14. 跟異性朋友使用親密暱稱", type: "light" },
+    { id: 15, sec: "第二部分｜異性相處 ❤️‍🔥", text: "15. 跟異性朋友有肢體接觸", type: "light" },
+    { id: 16, sec: "第二部分｜異性相處 ❤️‍🔥", text: "16. 擁抱異性朋友", type: "light" },
+    { id: 17, sec: "第二部分｜異性相處 ❤️‍🔥", text: "17. 勾肩搭背", type: "light" },
+    { id: 18, sec: "第二部分｜異性相處 ❤️‍🔥", text: "18. 喝異性喝過的飲料", type: "light" },
+    { id: 19, sec: "第二部分｜異性相處 ❤️‍🔥", text: "19. 吃異性吃過的東西", type: "light" },
+    { id: 20, sec: "第二部分｜異性相處 ❤️‍🔥", text: "20. 喝異性喝過的酒", type: "light" },
+    { id: 21, sec: "第二部分｜異性相處 ❤️‍🔥", text: "21. 跟異性單獨過夜", type: "light" },
+    { id: 22, sec: "第二部分｜異性相處 ❤️‍🔥", text: "22. 跟一群異性朋友一起過夜", type: "light" },
+    { id: 23, sec: "第二部分｜異性相處 ❤️‍🔥", text: "23. 異性朋友在自己家過夜", type: "light" },
+    { id: 24, sec: "第二部分｜異性相處 ❤️‍🔥", text: "24. 旅行時跟異性朋友住同一間房", type: "light" },
+    { id: 25, sec: "第二部分｜異性相處 ❤️‍🔥", text: "25. 跟異性朋友一起旅行", type: "light" },
+
+    { id: 26, sec: "第三部分｜酒精與夜生活 🍻", text: "26. 跟朋友喝酒", type: "light" },
+    { id: 27, sec: "第三部分｜酒精與夜生活 🍻", text: "27. 跟一群異性朋友喝酒", type: "light" },
+    { id: 28, sec: "第三部分｜酒精與夜生活 🍻", text: "28. 喝到微醺", type: "light" },
+    { id: 29, sec: "第三部分｜酒精與夜生活 🍻", text: "29. 喝到醉", type: "light" },
+    { id: 30, sec: "第三部分｜酒精與夜生活 🍻", text: "30. 喝醉後由異性送回家", type: "light" },
+    { id: 31, sec: "第三部分｜酒精與夜生活 🍻", text: "31. 喝醉後去朋友家", type: "light" },
+    { id: 32, sec: "第三部分｜酒精與夜生活 🍻", text: "32. 去酒吧", type: "light" },
+    { id: 33, sec: "第三部分｜酒精與夜生活 🍻", text: "33. 去夜店", type: "light" },
+    { id: 34, sec: "第三部分｜酒精與夜生活 🍻", text: "34. 聚會到凌晨", type: "light" },
+    { id: 35, sec: "第三部分｜酒精與夜生活 🍻", text: "35. 臨時決定續攤", type: "light" },
+    { id: 36, sec: "第三部分｜酒精與夜生活 🍻", text: "36. 臨時改變原本回家的時間", type: "light" },
+    { id: 37, sec: "第三部分｜酒精與夜生活 🍻", text: "37. 原本說不喝酒，最後還是喝了", type: "light" },
+    { id: 38, sec: "第三部分｜酒精與夜生活 🍻", text: "38. 發生自己知道伴侶會介意的事情，但沒有主動告知", type: "light" },
+    { id: 39, sec: "第三部分｜酒精與夜生活 🍻", text: "39. 伴侶從別人口中才知道某件自己做過的事情", type: "light" },
+
+    { id: 40, sec: "第四部分｜報備與聯絡 📱", text: "40. 出門前告訴伴侶去哪裡", type: "light" },
+    { id: 41, sec: "第四部分｜報備與聯絡 📱", text: "41. 到目的地後告訴伴侶", type: "light" },
+    { id: 42, sec: "第四部分｜報備與聯絡 📱", text: "42. 臨時改行程時告訴伴侶", type: "light" },
+    { id: 43, sec: "第四部分｜報備與聯絡 📱", text: "43. 臨時跟別人一起走時告訴伴侶", type: "light" },
+    { id: 44, sec: "第四部分｜報備與聯絡 📱", text: "44. 忙到不能回訊息時先說一聲", type: "light" },
+    { id: 45, sec: "第四部分｜報備與聯絡 📱", text: "45. 已讀不回幾個小時", type: "light" },
+    { id: 46, sec: "第四部分｜報備與聯絡 📱", text: "46. 忙一整天沒有聯絡", type: "light" },
+    { id: 47, sec: "第四部分｜報備與聯絡 📱", text: "47. 睡覺前說晚安", type: "light" },
+    { id: 48, sec: "第四部分｜報備與聯絡 📱", text: "48. 起床後說早安", type: "light" },
+    { id: 49, sec: "第四部分｜報備與聯絡 📱", text: "49. 手機沒電前先告知", type: "light" },
+    { id: 50, sec: "第四部分｜報備與聯絡 📱", text: "50. 臨時消失幾個小時", type: "light" },
+    { id: 51, sec: "第四部分｜報備與聯絡 📱", text: "51. 約會途中突然很久不回訊息", type: "light" },
+    { id: 52, sec: "第四部分｜報備與聯絡 📱", text: "52. 跟朋友聊天時沒有注意到伴侶正在等自己", type: "light" },
+
+    { id: 53, sec: "第五部分｜手機與社群 📱", text: "53. 可以看彼此手機", type: "light" },
+    { id: 54, sec: "第五部分｜手機與社群 📱", text: "54. 知道彼此手機密碼", type: "light" },
+    { id: 55, sec: "第五部分｜手機與社群 📱", text: "55. 看對方與朋友的聊天紀錄", type: "light" },
+    { id: 56, sec: "第五部分｜手機與社群 📱", text: "56. 跟異性互動限時動態", type: "light" },
+    { id: 57, sec: "第五部分｜手機與社群 📱", text: "57. 幫異性朋友貼文按讚", type: "light" },
+    { id: 58, sec: "第五部分｜手機與社群 📱", text: "58. 私訊異性朋友", type: "light" },
+    { id: 59, sec: "第五部分｜手機與社群 📱", text: "59. 刪除跟異性的聊天紀錄", type: "light" },
+    { id: 60, sec: "第五部分｜手機與社群 📱", text: "60. 把某些聊天內容刻意隱藏", type: "light" },
+    { id: 61, sec: "第五部分｜手機與社群 📱", text: "61. 追蹤前任社群", type: "light" },
+    { id: 62, sec: "第五部分｜手機與社群 📱", text: "62. 看前任的限時動態", type: "light" },
+    { id: 63, sec: "第五部分｜手機與社群 📱", text: "63. 跟前任私訊", type: "light" },
+
+    { id: 64, sec: "第六部分｜前任 🫧", text: "64. 跟前任保持朋友關係", type: "light" },
+    { id: 65, sec: "第六部分｜前任 🫧", text: "65. 前任主動聯絡時回覆", type: "light" },
+    { id: 66, sec: "第六部分｜前任 🫧", text: "66. 前任生日傳訊息祝福", type: "light" },
+    { id: 67, sec: "第六部分｜前任 🫧", text: "67. 前任生病時關心", type: "light" },
+    { id: 68, sec: "第六部分｜前任 🫧", text: "68. 跟前任單獨吃飯", type: "light" },
+    { id: 69, sec: "第六部分｜前任 🫧", text: "69. 跟前任單獨見面", type: "light" },
+    { id: 70, sec: "第六部分｜前任 🫧", text: "70. 跟前任一起參加朋友聚會", type: "light" },
+    { id: 71, sec: "第六部分｜前任 🫧", text: "71. 保留前任送的禮物", type: "light" },
+    { id: 72, sec: "第六部分｜前任 🫧", text: "72. 保留前任的照片", type: "light" },
+    { id: 73, sec: "第六部分｜前任 🫧", text: "73. 不主動告訴伴侶前任曾經聯絡", type: "light" },
+
+    { id: 74, sec: "第七部分｜朋友與社交 👭", text: "74. 朋友臨時約出門，直接答應", type: "light" },
+    { id: 75, sec: "第七部分｜朋友與社交 👭", text: "75. 因為朋友取消原本的約會", type: "light" },
+    { id: 76, sec: "第七部分｜朋友與社交 👭", text: "76. 朋友需要幫忙時，即使伴侶不方便也去幫忙", type: "light" },
+    { id: 77, sec: "第七部分｜朋友與社交 👭", text: "77. 跟朋友抱怨伴侶", type: "light" },
+    { id: 78, sec: "第七部分｜朋友與社交 👭", text: "78. 跟朋友討論兩人的感情問題", type: "light" },
+    { id: 79, sec: "第七部分｜朋友與社交 👭", text: "79. 把伴侶的私事告訴朋友", type: "light" },
+    { id: 80, sec: "第七部分｜朋友與社交 👭", text: "80. 朋友對伴侶有負面意見", type: "light" },
+    { id: 81, sec: "第七部分｜朋友與社交 👭", text: "81. 朋友不喜歡伴侶", type: "light" },
+    { id: 82, sec: "第七部分｜朋友與社交 👭", text: "82. 伴侶不喜歡自己的某個朋友", type: "light" },
+    { id: 83, sec: "第七部分｜朋友與社交 👭", text: "83. 伴侶不在場時，朋友問兩人的私事", type: "light" },
+
+    { id: 84, sec: "第八部分｜「被放在心上」🥺", text: "84. 跟朋友聊天時，仍然記得伴侶正在等自己", type: "light" },
+    { id: 85, sec: "第八部分｜「被放在心上」🥺", text: "85. 約會時把手機放下來陪伴對方", type: "light" },
+    { id: 86, sec: "第八部分｜「被放在心上」🥺", text: "86. 臨時有事情時，主動告訴伴侶", type: "light" },
+    { id: 87, sec: "第八部分｜「被放在心上」🥺", text: "87. 伴侶遠道而來時，特別注意她的需求", type: "light" },
+    { id: 88, sec: "第八部分｜「被放在心上」🥺", text: "88. 伴侶一個人等待時，主動確認她在哪裡", type: "light" },
+    { id: 89, sec: "第八部分｜「被放在心上」🥺", text: "89. 看到伴侶不安時，主動安撫", type: "light" },
+    { id: 90, sec: "第八部分｜「被放在心上」🥺", text: "90. 知道某件事情是伴侶的敏感點後，做決定時稍微考慮一下", type: "light" },
+    { id: 91, sec: "第八部分｜「被放在心上」🥺", text: "91. 即使自己覺得「沒什麼」，仍願意理解伴侶為什麼難過", type: "light" },
+    { id: 92, sec: "第八部分｜「被放在心上」🥺", text: "92. 伴侶需要自己的時候，讓她知道「我沒有忘記妳」", type: "light" },
+
+    { id: 93, sec: "第九部分｜吵架與衝突 🌧️", text: "93. 生氣時暫時不回訊息", type: "light" },
+    { id: 94, sec: "第九部分｜吵架與衝突 🌧️", text: "94. 需要冷靜幾個小時", type: "light" },
+    { id: 95, sec: "第九部分｜吵架與衝突 🌧️", text: "95. 吵架時暫時掛電話", type: "light" },
+    { id: 96, sec: "第九部分｜吵架與衝突 🌧️", text: "96. 說「我現在不想談」", type: "light" },
+    { id: 97, sec: "第九部分｜吵架與衝突 🌧️", text: "97. 雙方冷靜後再重新談", type: "light" },
+    { id: 98, sec: "第九部分｜吵架與衝突 🌧️", text: "98. 吵架時提到以前發生過的事情", type: "light" },
+    { id: 99, sec: "第九部分｜吵架與衝突 🌧️", text: "99. 吵架時說「算了」", type: "light" },
+    { id: 100, sec: "第九部分｜吵架與衝突 🌧️", text: "100. 吵架時說「分手」", type: "light" },
+    { id: 101, sec: "第九部分｜吵架與衝突 🌧️", text: "101. 一方哭的時候，另一方先安撫而不是講道理", type: "light" },
+    { id: 102, sec: "第九部分｜吵架與衝突 🌧️", text: "102. 同一件事情重複發生時重新討論", type: "light" },
+    { id: 103, sec: "第九部分｜吵架與衝突 🌧️", text: "103. 道歉後需要實際行動證明", type: "light" },
+    { id: 104, sec: "第九部分｜吵架與衝突 🌧️", text: "104. 其中一個人受傷時，另一個人需要主動修復", type: "light" },
+
+    { id: 105, sec: "第十部分｜自由與安全感 🌱", text: "105. 自己想做的事情，不需要全部告訴伴侶", type: "light" },
+    { id: 106, sec: "第十部分｜自由與安全感 🌱", text: "106. 可以有自己的朋友圈", type: "light" },
+    { id: 107, sec: "第十部分｜自由與安全感 🌱", text: "107. 可以有自己的私人時間", type: "light" },
+    { id: 108, sec: "第十部分｜自由與安全感 🌱", text: "108. 可以一個人出去玩", type: "light" },
+    { id: 109, sec: "第十部分｜自由與安全感 🌱", text: "109. 可以不即時回訊息", type: "light" },
+    { id: 110, sec: "第十部分｜自由與安全感 🌱", text: "110. 可以有不跟伴侶分享的私人空間", type: "light" },
+    { id: 111, sec: "第十部分｜自由與安全感 🌱", text: "111. 可以跟伴侶有不同的價值觀", type: "light" },
+    { id: 112, sec: "第十部分｜自由與安全感 🌱", text: "112. 可以做伴侶不喜歡但自己認為合理的事情", type: "light" },
+    { id: 113, sec: "第十部分｜自由與安全感 🌱", text: "113. 伴侶不舒服時，自己仍然保有做選擇的權利", type: "light" },
+
+    { id: 114, sec: "第十一部分｜未來 💍", text: "114. 我希望這段感情長久", type: "light" },
+    { id: 115, sec: "第十一部分｜未來 💍", text: "115. 我把結婚視為可能的未來", type: "light" },
+    { id: 116, sec: "第十一部分｜未來 💍", text: "116. 即使遇到很大的問題，也希望先努力修復", type: "light" },
+    { id: 117, sec: "第十一部分｜未來 💍", text: "117. 遇到問題時，我希望兩個人一起想辦法", type: "light" },
+    { id: 118, sec: "第十一部分｜未來 💍", text: "118. 我希望伴侶把「我們的未來」放進人生規劃", type: "light" },
+    { id: 119, sec: "第十一部分｜未來 💍", text: "119. 我願意為這段關係做出一些改變", type: "light" },
+    { id: 120, sec: "第十一部分｜未來 💍", text: "120. 我希望對方也願意為這段關係做出一些改變", type: "light" },
+
+    { id: 121, sec: "⭐ 最後一部分｜真正重要的問答題", text: "121. 「什麼行為最容易讓你失去安全感？」", type: "text" },
+    { id: 122, sec: "⭐ 最後一部分｜真正重要的問答題", text: "122. 「什麼行為最能讓你感覺自己被愛？」", type: "text" },
+    { id: 123, sec: "⭐ 最後一部分｜真正重要的問答題", text: "123. 「你最害怕伴侶怎麼對你？」", type: "text" },
+    { id: 124, sec: "⭐ 最後一部分｜真正重要的問答題", text: "124. 「你最希望伴侶理解你的哪一個部分？」", type: "text" },
+    { id: 125, sec: "⭐ 最後一部分｜真正重要的問答題", text: "125. 「你覺得自己在這段關係裡最需要改變的是什麼？」", type: "text" },
+    { id: 126, sec: "⭐ 最後一部分｜真正重要的問答題", text: "126. 「你覺得伴侶最需要改變的是什麼？」", type: "text" },
+    { id: 127, sec: "⭐ 最後一部分｜真正重要的問答題", text: "127. 「什麼事情即使伴侶不喜歡，你仍然希望保有自由？」", type: "text" },
+    { id: 128, sec: "⭐ 最後一部分｜真正重要的問答題", text: "128. 「什麼事情即使自己不在意，也願意為了伴侶稍微調整？」", type: "text" },
+    { id: 129, sec: "⭐ 最後一部分｜真正重要的問答題", text: "129. 「如果我們兩個的界線不同，你希望我們怎麼找到答案？」", type: "text" },
+    { id: 130, sec: "⭐ 最後一部分｜真正重要的問答題", text: "130. 「你希望我們最後變成什麼樣的情侶？」", type: "text" },
+    { id: 131, sec: "❤️ 最後的衷心期許", text: "131. 完成這份問卷後，我最希望我們一起做到的是：", type: "text" }
+];
+
+const standardLightOptions = [
+    { label: "🟢 綠燈｜完全可以接受", val: "綠燈" },
+    { label: "🟡 黃燈｜可以，但希望有一些界線／提前告知", val: "黃燈" },
+    { label: "🔴 紅燈｜我很難接受", val: "紅燈" },
+    { label: "❓ 不確定｜需要討論", val: "不確定" }
+];
+
+let currentIndex = 0;
+let userAnswers = {};
+
+window.onload = function() {
+    const saved = localStorage.getItem("relationship_quiz_answers");
+    if (saved) {
+        userAnswers = JSON.parse(saved);
+    }
+};
+
+function showPage(pageId) {
+    document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+function startQuiz() {
+    showPage('page-quiz');
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = rawQuestions[currentIndex];
+    
+    const progress = Math.round(((currentIndex + 1) / rawQuestions.length) * 100);
+    document.getElementById('progress-bar').style.width = progress + '%';
+    document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${rawQuestions.length}`;
+
+    document.getElementById('section-tag').innerText = q.sec;
+    document.getElementById('question-title').innerText = q.text;
+
+    const optContainer = document.getElementById('options-container');
+    const noteContainer = document.getElementById('note-container');
+    const noteInput = document.getElementById('note-input');
+    
+    optContainer.innerHTML = '';
+    noteContainer.classList.add('hidden');
+    noteInput.value = '';
+
+    const currentAns = userAnswers[q.id] || {};
+
+    if (q.type === 'single') {
+        q.options.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = `option-btn ${currentAns.ans === opt ? 'selected' : ''}`;
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(q.id, opt);
+            optContainer.appendChild(btn);
+        });
+    } else if (q.type === 'info') {
+        optContainer.innerHTML = '<p style="color:var(--text-sub); font-size:0.95em; line-height:1.6;">本頁為注意事項，看完後請直接點擊「下一題」繼續 🤍</p>';
+    } else if (q.type === 'light') {
+        standardLightOptions.forEach(opt => {
+            const btn = document.createElement('div');
+            btn.className = `option-btn ${currentAns.ans === opt.val ? 'selected' : ''}`;
+            btn.innerText = opt.label;
+            btn.onclick = () => {
+                selectOption(q.id, opt.val);
+                noteContainer.classList.remove('hidden');
+            };
+            optContainer.appendChild(btn);
+        });
+
+        if (currentAns.ans) {
+            noteContainer.classList.remove('hidden');
+            noteInput.value = currentAns.note || '';
+        }
+
+        noteInput.oninput = (e) => {
+            if (!userAnswers[q.id]) userAnswers[q.id] = {};
+            userAnswers[q.id].note = e.target.value;
+            saveLocally();
+        };
+
+    } else if (q.type === 'text') {
+        const txt = document.createElement('textarea');
+        txt.rows = 4;
+        txt.placeholder = "請寫下妳最真實的想法...";
+        txt.value = currentAns.ans || '';
+        txt.oninput = (e) => {
+            userAnswers[q.id] = { ans: e.target.value };
+            saveLocally();
+        };
+        optContainer.appendChild(txt);
+    }
+
+    document.getElementById('btn-prev').style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').innerText = currentIndex === rawQuestions.length - 1 ? '完成並提交' : '下一題';
+}
+
+function selectOption(qId, val) {
+    if (!userAnswers[qId]) userAnswers[qId] = {};
+    userAnswers[qId].ans = val;
+    saveLocally();
+    renderQuestion();
+}
+
+function saveLocally() {
+    localStorage.setItem("relationship_quiz_answers", JSON.stringify(userAnswers));
+}
+
+function prevQuestion() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+    }
+}
+
+function nextQuestion() {
+    const q = rawQuestions[currentIndex];
+    if (q.type !== 'info' && (!userAnswers[q.id] || !userAnswers[q.id].ans)) {
+        if (!confirm("這一題你還沒有選擇答案喔！確定要跳到下一題嗎？")) {
+            return;
+        }
+    }
+
+    if (currentIndex < rawQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+    } else {
+        finishQuiz();
+    }
+}
+
+function finishQuiz() {
+    saveLocally();
+    const jsonStr = JSON.stringify(userAnswers);
+    const code = btoa(encodeURIComponent(jsonStr));
+    
+    document.getElementById('result-code-display').innerText = code;
+    showPage('page-finish');
+}
+
+function copyResultCode() {
+    const code = document.getElementById('result-code-display').innerText;
+    navigator.clipboard.writeText(code).then(() => {
+        alert("專屬結果碼已複製到剪貼簿！可以傳給我囉！");
+    });
+}
+
+function processComparison() {
+    const code1 = document.getElementById('code-abao').value.trim();
+    const code2 = document.getElementById('code-xiaoguai').value.trim();
+
+    if (!code1 || !code2) {
+        alert("請確保兩人的結果碼都有貼上喔！");
+        return;
+    }
+
+    try {
+        const data1 = JSON.parse(decodeURIComponent(atob(code1)));
+        const data2 = JSON.parse(decodeURIComponent(atob(code2)));
+
+        let totalLightQs = 0;
+        let sameCount = 0;
+
+        const listContainer = document.getElementById('comparison-list');
+        listContainer.innerHTML = '';
+
+        rawQuestions.forEach(q => {
+            if (q.type === 'info') return;
+
+            const ans1 = data1[q.id] || { ans: "未填" };
+            const ans2 = data2[q.id] || { ans: "未填" };
+
+            const isMatch = ans1.ans === ans2.ans;
+            if (q.type === 'light') {
+                totalLightQs++;
+                if (isMatch) sameCount++;
+            }
+
+            const item = document.createElement('div');
+            item.className = 'compare-card';
+            
+            let colorTag = isMatch ? '<span class="compare-tag bg-green">答案一致</span>' : '<span class="compare-tag bg-red">想法不同</span>';
+            if (q.type === 'text') colorTag = '<span class="compare-tag bg-purple">問答交流</span>';
+
+            item.innerHTML = `
+                <div style="font-weight:bold; font-size:0.95em; margin-bottom:5px;">${q.text} ${colorTag}</div>
+                <div style="font-size:0.9em; color:#334155; margin-top:4px;">
+                    <strong>👦 阿寶：</strong> ${ans1.ans || '未填'} ${ans1.note ? `<br><small style="color:#64748B">💬 補充：${ans1.note}</small>` : ''}
+                </div>
+                <div style="font-size:0.9em; color:#334155; margin-top:4px;">
+                    <strong>👧 小乖：</strong> ${ans2.ans || '未填'} ${ans2.note ? `<br><small style="color:#64748B">💬 補充：${ans2.note}</small>` : ''}
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+
+        const matchPercent = Math.round((sameCount / totalLightQs) * 100) || 0;
+        document.getElementById('match-score').innerText = matchPercent + '%';
+
+        showPage('page-compare-result');
+
+    } catch (e) {
+        alert("結果碼解析失敗，請確認代碼是否完整複製！");
+    }
+}
+</script>
+
+</body>
+</html>
