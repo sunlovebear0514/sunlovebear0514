@@ -25,6 +25,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -90,7 +91,7 @@
         }
 
         .love-note {
-            background-color: #F7F3EF; /* 奶茶淺底 */
+            background-color: #F7F3EF;
             border-left: 4px solid var(--secondary);
             padding: 16px;
             border-radius: 12px;
@@ -103,7 +104,7 @@
         }
 
         .intro-box {
-            background-color: #F0F5F6; /* 淺藍底 */
+            background-color: #F0F5F6;
             border-left: 4px solid var(--primary);
             padding: 18px;
             border-radius: 12px;
@@ -157,11 +158,6 @@
             transform: none;
         }
 
-        /* 題目選項區塊 */
-        .question-card {
-            margin-top: 10px;
-        }
-
         .section-tag {
             display: inline-block;
             background: #EBF3F5;
@@ -200,6 +196,7 @@
             display: flex;
             align-items: center;
             color: var(--text-main);
+            user-select: none;
         }
 
         .option-btn:hover {
@@ -240,7 +237,6 @@
             display: none !important;
         }
 
-        /* 完成頁與代碼 */
         .code-box {
             background-color: #F8FAFC;
             padding: 15px;
@@ -255,7 +251,6 @@
             color: #475569;
         }
 
-        /* 比對結果頁面 */
         .compare-card {
             border-bottom: 1px solid #E2E8F0;
             padding: 15px 0;
@@ -294,15 +289,15 @@
 
         <div class="love-note">
             我知道我們最近都有點累了，但希望「我們」可以更好。<br>
-            一起加油吧寶貝💕
+            加油！我都會陪著妳一起度過的 🤍
         </div>
 
         <div class="intro-box">
             這不是一份用來限制彼此的規則，也不是要找出誰對誰錯。<br><br>
             我們本來就是兩個不同的人，對很多事情的感受也不一定一樣。希望透過這份問卷，更了解彼此在意什麼、什麼會讓彼此不安，以及什麼事情可以放心交給對方自由。<br><br>
-            🟢 綠燈：我可以接受，不太需要特別討論<br>
-            🟡 黃燈：我可能會不舒服，希望可以提前告知或顧慮我的感受<br>
-            🔴 紅燈：這是我的重要界線，希望伴侶不要做<br>
+            🟢 綠燈：我可以接受 / 完全沒差 / 完全同意<br>
+            🟡 黃燈：偶爾沒關係，但希望提前告知或討論<br>
+            🔴 紅燈：這是我的重要界線 / 完全不行<br>
             ❓ 不確定：我目前不知道，希望我們一起討論<br><br>
             <strong>我們的目標不是讓彼此答案一樣，而是找到「兩個人都能舒服地待在裡面」的方式。✨</strong>
         </div>
@@ -535,6 +530,7 @@ const rawQuestions = [
     { id: 131, sec: "❤️ 最後的衷心期許", text: "131. 完成這份問卷後，我最希望我們一起做到的是：", type: "text" }
 ];
 
+// 預設標準選項
 const standardLightOptions = [
     { label: "🟢 綠燈｜完全可以接受", val: "綠燈" },
     { label: "🟡 黃燈｜可以，但希望有一些界線／提前告知", val: "黃燈" },
@@ -542,13 +538,54 @@ const standardLightOptions = [
     { label: "❓ 不確定｜需要討論", val: "不確定" }
 ];
 
+// 根據題號動態回傳專屬選項
+function getOptionsForQuestion(qId) {
+    if (qId >= 40 && qId <= 49) {
+        return [
+            { label: "🟢 綠燈｜不說也沒關係，但可以分享", val: "綠燈" },
+            { label: "🟡 黃燈｜事前不一定要說，事後要講", val: "黃燈" },
+            { label: "🔴 紅燈｜一定要講，並且提前", val: "紅燈" },
+            { label: "❓ 不確定｜需要討論", val: "不確定" }
+        ];
+    } else if (qId >= 53 && qId <= 55) {
+        return [
+            { label: "🟢 綠燈｜一定要隨時可以", val: "綠燈" },
+            { label: "🟡 黃燈｜平常不用知道，但有需要一定要可以", val: "黃燈" },
+            { label: "🔴 紅燈｜完全不行", val: "紅燈" },
+            { label: "❓ 不確定｜需要討論", val: "不確定" }
+        ];
+    } else if ((qId >= 84 && qId <= 92) || (qId >= 96 && qId <= 104)) {
+        return [
+            { label: "🟢 綠燈｜完全沒差", val: "綠燈" },
+            { label: "🟡 黃燈｜偶爾沒關係，但有/沒有比較好", val: "黃燈" },
+            { label: "🔴 紅燈｜非常重要、完全可以/不行", val: "紅燈" },
+            { label: "❓ 不確定｜需要討論", val: "不確定" }
+        ];
+    } else if (qId >= 93 && qId <= 95) {
+        return [
+            { label: "🟢 綠燈｜完全沒差", val: "綠燈" },
+            { label: "🟡 黃燈｜偶爾沒關係，但要說一下", val: "黃燈" },
+            { label: "🔴 紅燈｜完全不行", val: "紅燈" },
+            { label: "❓ 不確定｜需要討論", val: "不確定" }
+        ];
+    } else if (qId >= 114 && qId <= 120) {
+        return [
+            { label: "🟢 綠燈｜非常同意", val: "綠燈" },
+            { label: "🟡 黃燈｜沒有特別的想法，沒有也沒關係", val: "黃燈" },
+            { label: "🔴 紅燈｜不同意", val: "紅燈" },
+            { label: "❓ 不確定｜需要討論", val: "不確定" }
+        ];
+    }
+    return standardLightOptions;
+}
+
 let currentIndex = 0;
 let userAnswers = {};
 
 window.onload = function() {
     const saved = localStorage.getItem("relationship_quiz_answers");
     if (saved) {
-        userAnswers = JSON.parse(saved);
+        try { userAnswers = JSON.parse(saved); } catch(e){}
     }
 };
 
@@ -587,19 +624,20 @@ function renderQuestion() {
             const btn = document.createElement('div');
             btn.className = `option-btn ${currentAns.ans === opt ? 'selected' : ''}`;
             btn.innerText = opt;
-            btn.onclick = () => selectOption(q.id, opt);
+            btn.onclick = (e) => { e.preventDefault(); selectOption(q.id, opt); };
             optContainer.appendChild(btn);
         });
     } else if (q.type === 'info') {
         optContainer.innerHTML = '<p style="color:var(--text-sub); font-size:0.95em; line-height:1.6;">本頁為注意事項，看完後請直接點擊「下一題」繼續 🤍</p>';
     } else if (q.type === 'light') {
-        standardLightOptions.forEach(opt => {
+        const optionsToUse = getOptionsForQuestion(q.id);
+        optionsToUse.forEach(opt => {
             const btn = document.createElement('div');
             btn.className = `option-btn ${currentAns.ans === opt.val ? 'selected' : ''}`;
             btn.innerText = opt.label;
-            btn.onclick = () => {
+            btn.onclick = (e) => {
+                e.preventDefault();
                 selectOption(q.id, opt.val);
-                noteContainer.classList.remove('hidden');
             };
             optContainer.appendChild(btn);
         });
@@ -635,7 +673,19 @@ function selectOption(qId, val) {
     if (!userAnswers[qId]) userAnswers[qId] = {};
     userAnswers[qId].ans = val;
     saveLocally();
-    renderQuestion();
+    
+    const buttons = document.querySelectorAll('#options-container .option-btn');
+    buttons.forEach(btn => {
+        if (btn.innerText.includes(val) || btn.innerText === val) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+
+    if (rawQuestions[currentIndex].type === 'light') {
+        document.getElementById('note-container').classList.remove('hidden');
+    }
 }
 
 function saveLocally() {
